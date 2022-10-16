@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./database.db"
+}
+
+model Package {
+  id Int @id @default(autoincrement())
+  description String?
+  locations PackageLocation[] @relation("package_location_package")
+  status String @default("ACTIVE")
+  @@map("PACKAGES")
+}
+
+model PackageLocation{
+  id Int @id @default(autoincrement())
+  datetime DateTime @default(now())
+
+  packageId Int
+  package Package @relation("package_location_package", fields: [packageId], references: [id])
+  
+  cityId Int
+  city City @relation("package_location_location", fields: [cityId], references: [id])
+
+  @@map("PACKAGE_LOCATIONS")
+}
+
+model City {
+  id Int @id @default(autoincrement())
+  name String 
+
+  packages PackageLocation[] @relation("package_location_location")
+
+  stateId Int
+  state State @relation("state_has_cities", fields: [stateId], references: [id])
+  
+  @@map("CITIES")
+}
+
+model State {
+  id Int @id @default(autoincrement())
+  name String 
+  acronym String
+  cities City[] @relation("state_has_cities")
+
+  countryId Int
+  country Country @relation("country_has_states", fields: [countryId], references: [id])
+
+  @@map("STATES")
+}
+
+
+model Country {
+  id Int @id @default(autoincrement())
+  name String 
+  acronym String
+
+  states State[] @relation("country_has_states")
+  
+  @@map("COUNTRIES")
+}
