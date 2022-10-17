@@ -148,7 +148,11 @@ class PackageService {
     return packages.map( x => { return {
       'id' : x.id,
       'description' : x.description,
-      'location' : `${x.locations[0].city.name} ${x.locations[0].city.state.acronym}`
+      'location' : `${x.locations[0].city.name} ${x.locations[0].city.state.acronym}`,
+      'history' : x.locations.map(k => { return {
+        'location' : `${k.city.name} ${k.city.state.acronym}`,
+        'timestamp' : k.datetime
+      }})
     }})
   }
 

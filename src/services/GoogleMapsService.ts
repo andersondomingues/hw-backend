@@ -39,7 +39,11 @@ export class GoogleMapsService {
     const response = await this.googleApi.get("maps/api/directions/json", { params: { 
       origin : origin,
       destination: destination,
-      key : process.env.API_KEY_GOOGLE
+      key : process.env.API_KEY_GOOGLE,
+      alternatives: false,
+      mode: 'driving',
+      units: 'metric',
+      
     }}); 
     return response.data;
   }
