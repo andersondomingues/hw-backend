@@ -24,12 +24,25 @@ export class GoogleMapsService {
 
   static getDistance = (origin: String, destination: String) => {
 
-    this.googleApi.get("maps/api/distancematrix/json", { params: { 
+    const response = this.googleApi.get("maps/api/distancematrix/json", { params: { 
       origins : origin,
       destinations : destination,
       units : 'imperial',
       key : process.env.GOOGLE_API_KEY
     }}); 
+
+    return response;
   }
+
+  static getDirections = async (origin: String, destination: String) => {
+
+    const response = await this.googleApi.get("maps/api/directions/json", { params: { 
+      origin : origin,
+      destination: destination,
+      key : process.env.API_KEY_GOOGLE
+    }}); 
+    return response.data;
+  }
+  
 }
 

@@ -1,9 +1,9 @@
 {
-  "name": "node_heat",
+  "name": "warehouse-backend",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "",
-  "author": "Solartech",
+  "author": "Anderson Domingues",
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --exit-child --transpile-only --inspect --ignore-watch node_modules src/app.ts",
