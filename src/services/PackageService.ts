@@ -3,27 +3,58 @@ import { countReset } from 'console';
 import prismaClient from '../prisma';
 
 class PackageService {
-  
-  static async createPackage(description: string, cityId: number) {
+  static async remove(index: number) {
 
-    const location = prismaClient.city.findUnique({
+    const deletionHistory = await prismaClient.packageLocation.deleteMany({
       where : {
-        id : cityId
+        packageId : index
       }
     });
 
-    if(!location) return "INVALID_CITY_ID";
+    const deletion = await prismaClient.package.delete({
+      where : {
+        id: index
+      }
+    });
+
+    return `Erased ${deletionHistory.count} record from history. Record erasing status: ${deletion.status}}.`;
+  }
+
+
+  static async createPackage(description: string, cityName: string, stateAcronym: string) {
+
+    const state = await prismaClient.state.findFirst({
+      where: {
+        acronym: stateAcronym
+      }
+    })
+
+    if(!state) return "ENABLE TO FIND STATE";
+
+    const city = await prismaClient.city.findFirst({
+      where : {
+        name : cityName,
+        stateId : state?.id
+      },
+      include: {
+        state: true
+      }
+    });
+
+    if(!city) return "UNABLE TO FIND CITY";
 
     const packagg = await prismaClient.package.create({
       data : {
         description,
         locations: {
           create : {
-            cityId,            
+            cityId: city.id
           }
         }
       }
     });
+
+    if(!packagg) return "UNABLE TO CREATE PACKAGE";
 
     return {
       'id' : packagg.id,

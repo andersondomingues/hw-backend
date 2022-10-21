@@ -34,16 +34,16 @@ export class GoogleMapsService {
     return response;
   }
 
-  static getDirections = async (origin: String, destination: String) => {
+  static getDirections = async (origin: String, destinations: String[]) => {
 
     const response = await this.googleApi.get("maps/api/directions/json", { params: { 
       origin : origin,
-      destination: destination,
+      intermediates: destinations[0], 
+      destination: destinations[1],
       key : process.env.API_KEY_GOOGLE,
       alternatives: false,
       mode: 'driving',
-      units: 'metric',
-      
+      units: 'imperial',
     }}); 
     return response.data;
   }
